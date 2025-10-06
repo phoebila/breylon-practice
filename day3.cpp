@@ -7,29 +7,86 @@
 // 6. Rule of Three states that if a class requires a user-defined destructor, copy constructor, or copy assignment operator, it likely requires all three. This is because these three functions are responsible for managing the resources of the class, and if one of them is not properly defined, it can lead to resource leaks or undefined behavior.
 //7. Rule of Five extends the Rule of Three to include move semantics. It states that if a class requires a user-defined destructor, copy constructor, copy assignment operator, move constructor, or move assignment operator, it likely requires all five. This is because move semantics can help optimize resource management by allowing resources to be transferred from one object to another without unnecessary copying.
 
+#include <iostream>
+
 struct Vector {
   // Manage dynamic array to illustrate Rule of Three/Five
-  int *arr;
+  int *data;
   int size;
-  int x;
-  int y;
+  int capacity;
 
-  // Parameterized constructor for dynamic array
-  Vector(int s) : size(s) {
-      arr = new int[size];
-  }
+  public:
+    //default constructor
+    Vector() {
+        data = new int[1];
+        size = 0;
+        capacity = 1;
+    }
 
-  // Copy constructor for dynamic array
-  Vector(const Vector &v) : x(v.x), y(v.y), size(v.size) {
-      arr = new int[size];
-      for (int i = 0; i < size; ++i) {
-          arr[i] = v.arr[i];
-      }
-  }
+    // Parameterized constructor
+    Vector(int n){
+        data = new int[n];
+        size = 0;
+        capacity = n;
+    }
 
-  // Destructor
-  ~Vector() {
-      delete[] arr;
-  }
+    // copy constructor
+    Vector(const Vector &other) {
+        size = other.size;
+        capacity = other.capacity;
+        data = new int[capacity];
+        for (int i = 0; i < size; i++) {
+            data[i] = other.data[i];
+        }
+    }
+
+    // copy assignment operator
+    Vector& operator=(const Vector &other) {
+        if (this != &other) { // self-assignment check
+            delete[] data; // free existing resource
+            size = other.size;
+            capacity = other.capacity;
+            data = new int[capacity];
+            for (int i = 0; i < size; i++) {
+                data[i] = other.data[i];
+            }
+        }
+        return *this;
+    }
+
+    // Destructor
+    ~Vector() {
+        delete[] data;
+    }
+
+    // push back function
+    void push_back(int value) {
+        if (size == capacity) {
+            // resize
+            capacity *= 2;
+            int* newData = new int[capacity];
+            for (int i = 0; i < size; i++) {
+                newData[i] = data[i];
+            }
+            delete[] data;
+            data = newData;
+        }
+        data[size++] = value;
+    }
+
+    // pop back function
+    void pop_back() {
+        if (size > 0) {
+            size--;
+        }
+    }
+
+    // print elements
+    void print() {
+        for (int i = 0; i < size; i++) {
+            std::cout << data[i] << " ";
+        }
+        std::cout << std::endl;
+    }
 
 };
