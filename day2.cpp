@@ -53,3 +53,65 @@ struct Rectangle : public Shape {
     }
 };
 
+//Quiz
+//1. What is encapsulation in C++ and how is it implemented?
+// Encapsulation is the bundling of data and methods that operate on that data within a single unit or class, restricting direct access to some of the object's components. It is implemented using access specifiers like private, protected, and public to control visibility.
+
+//2. What are the differences between public, private, and protected access specifiers in C++?
+// Public members are accessible from anywhere, private members are accessible only within the class, and protected members are accessible within the class and by derived classes.
+
+//3. Given this code, why does count need to be private? What would go wrong if it were public?
+class Counter {
+private:
+    int count;
+public:
+    void increment() { count++; }
+    int getCount() { return count; }
+};
+// If count were public, it could be modified directly from outside the class, potentially leading to invalid states (e.g., negative counts). Keeping it private ensures controlled access through methods.
+
+//4. Write a simple circle class that, stores radius, has a method getArea(), and uses a constructor to initialize radius.
+class CircleSimple {
+private:
+    double radius; //radius
+public:
+    CircleSimple(double r) : radius(r) {} //constructor
+    double getArea() const { //method to get area
+        return 3.14159 * radius * radius;
+    }
+};
+
+//5. What is the different between a pointer to an obj and a reference to an obj?
+// Pointer holds the memory address of the obj and can be reassigned/null, reference is an alias to the obj and cannot be null or reassigned.
+
+//6. Explain the difference between: 
+int* ptr = &x;
+int& ref = x;
+// ptr is a pointer to x, ref is a reference (alias) to x.
+
+//7. In the shape class, which keywords allows for an external function to access private data?
+// Friend keyword allows an external function to access private data of a class.
+
+//8. What is the difference between stack allocation and heap allocation?
+// Stack allocation is automatic and managed by the compiler, while heap allocation is manual and managed by the programmer using new/delete. Stack allocation is faster but limited in size, while heap allocation is more flexible but slower and requires explicit management.
+// Stack is generally safer as it is automatically cleaned up, while heap can lead to memory leaks if not managed properly.
+
+//9. What is a pointer and how is it used?
+// A pointer is a variable that stores the memory address of another variable. It is used to directly access and manipulate the memory location of the variable it points to, allowing for dynamic memory management and efficient array handling.
+
+//10. What is the output:
+class Box {
+public:
+    int w, h;
+    Box(int w, int h) { 
+        this->w = w;
+        this->h = h;
+    }
+    int area() { return w * h; }
+};
+
+int main() {
+    Box b(3, 4); //3=w, 4=h
+    cout << b.area(); // 3 * 4 = 12
+}
+// Output: 12

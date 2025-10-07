@@ -90,3 +90,85 @@ struct Vector {
     }
 
 };
+
+// Quiz
+//1. Whats the difference betweeen a constructor and a copy constructor?
+// A constructor initializes a new object, while a copy constructor creates a new object as a copy of an existing object.
+// ex: ClassName obj1; // constructor
+//     ClassName obj2 = obj1; // copy constructor
+
+//2. Why do we need a destructor in a class?
+// A destructor is needed to free up resources that were allocated to an object when it goes out of scope or is deleted, preventing memory leaks.
+
+//3. Explain the rule of 3
+// If a class requires a user-defined destructor, copy constructor, or copy assignment operator, it likely requires all three to manage resources properly.
+// ex: class MyClass {
+//      MyClass(const MyClass& other); // copy constructor
+//      MyClass& operator=(const MyClass& other); // copy assignment operator
+//      ~MyClass(); // destructor
+// };
+
+//4. List 5 special member functions included in the rule of 5:
+// 1. Destructor
+// 2. Copy constructor 
+// 3. Copy assignment operator
+// 4. Move constructor
+// 5. Move assignment operator
+
+//5. Whats wrong with this class?
+class Broken {
+    int* data;
+public:
+    Broken(int val) { data = new int(val); }
+    ~Broken() {}
+};
+// The class is missing a copy constructor and copy assignment operator. If an object of this class is copied, both objects will point to the same memory location, leading to double deletion when both destructors are called. This can be fixed by implementing the Rule of Three/Five.
+
+//6. How would you fix the code above?
+class Fixed {
+    int* data;
+public:
+    Fixed(int val) { data = new int(val); }
+    ~Fixed() { delete data; } // destructor
+    Fixed(const Fixed &other) { // copy constructor
+        data = new int(*(other.data));
+    }
+    Fixed& operator=(const Fixed &other) { // copy assignment operator
+        if (this != &other) {
+            delete data;
+            data = new int(*(other.data));
+        }
+        return *this;
+    }  
+};
+
+//7. Whats the difference between a deep and a shallow copy?
+// Deep copy creates a new copy of all objects and their resources, while shallow copy copies only the references to the objects, leading to shared resources.
+// ex: Deep copy - class MyClass { int* data; MyClass(const MyClass& other) { data = new int(*(other.data)); } }
+//     Shallow copy - class MyClass { int* data; MyClass(const MyClass& other) { data = other.data; } }
+
+//8. given this: whats printed?
+
+class Example {
+public:
+    Example() { cout << "Default "; }
+    Example(const Example&) { cout << "Copy "; }
+};
+int main() {
+    Example a;
+    Example b = a;
+}
+// Output: Default Copy, this is a shallow copy.
+
+//9. Why is it bad to call delete[] on a pointer that was allocated with new?
+// It is bad because it leads to undefined behavior, as the memory was not allocated as an array. This can cause memory corruption or crashes.
+// ex: int* p = new int; delete[] p; // undefined behavior
+
+//10. What is a move constructor and how does it differ from a copy constructor?
+// A move constructor transfers ownership of resources from a temporary object to a new object, leaving the temporary object in a valid but unspecified state. It is more efficient than a copy constructor, which creates a new copy of the resources.
+// ex: class MyClass {
+//      MyClass(MyClass&& other) noexcept {
+//          data = other.data;
+//          other.data = nullptr;
+//      }
+// };
